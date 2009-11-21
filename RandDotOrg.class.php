@@ -8,7 +8,8 @@
 class RandDotOrg
 {
 	// Constants
-	const VER	= '1.0.0';
+	const VER	= '1.0.1';
+	const BASE_URL = 'http://www.random.org/';
 	
 	// Declarations
 	private		$curl_ch;		// cURL channel
@@ -33,15 +34,6 @@ class RandDotOrg
 		// Close the cURL channel
 		curl_close($this->curl_ch);
 	}
-	
-	
-	
-	
-	
-	
-	
-	
-	
 	
 	
 	public function get_integers($num=1, $min=0, $max=10, $base=10)
@@ -122,15 +114,6 @@ class RandDotOrg
 		return $quota;
 	}
 	
-	
-	
-	
-	
-	
-	
-	
-	
-	
 	// Returns a string with the global parameters
 	private static function global_params()
 	{
@@ -142,13 +125,13 @@ class RandDotOrg
 	// Sequence Generator	sequences
 	// String Generator		strings
 	// Quota Checker		quota
-	private function make_request($type,$params)
+	private function make_request($type, $params)
 	{
 		//echo "TYPE: $type\n";
 		//echo "PARAMS:";
 		//print_r($params);
 		
-		$url = "http://random.org/";
+		$url = self::BASE_URL;
 		switch ($type)
 		{
 			case 'integer':
@@ -173,6 +156,7 @@ class RandDotOrg
 		
 		curl_setopt($this->curl_ch, CURLOPT_URL, $url);
 		curl_setopt($this->curl_ch, CURLOPT_RETURNTRANSFER, 1);
+		curl_setopt($this->curl_ch, CURLOPT_FOLLOWLOCATION, TRUE);
 		//curl_setopt($this->curl_ch, CURLOPT_TIMEOUT, $timeout);
 		$raw_data = curl_exec($this->curl_ch);
 		
