@@ -3,12 +3,19 @@
 /**
  * @author Jonathon Reinhart
  * @copyright 2008
+ * @date 08-10-2010
  */
+
+/*
+	1.0.2:	Bugfixes. Many thanks to Justin Phillips for pointing these out:
+		Bugfix: __construct()  $this->user_agent unintentionally used instead of local parameter $user_agent.
+		Bugfix: quota()        if $ip was null, $params was never declared caused an error when passed to make_request().
+*/
 
 class RandDotOrg
 {
 	// Constants
-	const VER	= '1.0.1';
+	const VER	= '1.0.2';
 	const BASE_URL = 'http://www.random.org/';
 	
 	// Declarations
@@ -23,7 +30,7 @@ class RandDotOrg
 		// Open the cURL channel
 		$this->curl_ch = curl_init();
 		
-		$user_agent = 'phpRandDotOrg ' . self::VER . ' : ' . $this->user_agent;
+		$user_agent = 'phpRandDotOrg ' . self::VER . ' : ' . $user_agent;
 		curl_setopt($this->curl_ch, CURLOPT_USERAGENT, $user_agent);
 	}
 	
@@ -106,6 +113,8 @@ class RandDotOrg
 	
 	public function quota($ip=NULL)
 	{
+		$params = array();
+
 		if ($ip)
 			$params['ip'] = $ip;
 		
