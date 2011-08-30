@@ -10,12 +10,16 @@
 	1.0.2:	Bugfixes. Many thanks to Justin Phillips for pointing these out:
 		Bugfix: __construct()  $this->user_agent unintentionally used instead of local parameter $user_agent.
 		Bugfix: quota()        if $ip was null, $params was never declared caused an error when passed to make_request().
+    
+    1.0.3:  Bugfixes. Thanks to Mindaugas J. for pointing these out:
+        Bugfix: get_strings()  'unique' parameter was not being included.
+                                Incorrect variable in Exception for 'len' checking.
 */
 
 class RandDotOrg
 {
 	// Constants
-	const VER	= '1.0.2';
+	const VER	= '1.0.3';
 	const BASE_URL = 'http://www.random.org/';
 	
 	// Declarations
@@ -90,19 +94,16 @@ class RandDotOrg
 		if ($num<1)
 			throw new Exception('num must be at least 1.');
 		if ($len<1 || $len>20)
-			throw new Exception('num must be from 1 and 20.');
+			throw new Exception('len must be from 1 and 20.');
 		if ( !($digits || $upperalpha || $loweralpha) )
 			throw new Exception('At least one character group must be true.');
-			
-		$dig	= ($digits)		? 'on' : 'off';
-		$ua		= ($upperalpha)	? 'on' : 'off';
-		$la		= ($loweralpha)	? 'on' : 'off';
-		
-		$params = array(	'num'			=> $num,
-							'len'			=> $len,
-							'digits'		=> $dig,
-							'upperalpha'	=> $ua,
-							'loweralpha'	=> $la,
+
+		$params = array(	'num'        => $num,
+							'len'        => $len,
+							'digits'     => ($digits) ? 'on' : 'off',
+							'upperalpha' => ($upperalpha) ? 'on' : 'off',
+							'loweralpha' => ($loweralpha) ? 'on' : 'off',
+							'unique'     => ($unique) ? 'on' : 'off' 
 						);
 		$str = $this->make_request('string', $params);
 		
@@ -207,12 +208,10 @@ class RandDotOrg
 		foreach($array as $k=>$v)
 		{
 			if (!is_array($v))
-			{
 				$string .= $k . '=' . $v . '&';
-			}
 		}
-		// Remove last &
 		
+		// Remove last &
 		$string = substr($string, 0, -1);
 		return $string;
 	}
