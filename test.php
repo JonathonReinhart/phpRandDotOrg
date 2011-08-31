@@ -3,9 +3,10 @@
 
 <pre>
 <?php
-	error_reporting(-1);
+	error_reporting(E_ALL);
+	ini_set('display_errors', 1);
 
-	include 'RandDotOrg.class.php';
+	include './RandDotOrg.class.php';
 	$tr = new RandDotOrg;
 ?>
 
@@ -49,5 +50,4 @@ Returns:
 	$ar = $tr->quota($ip=NULL);
 	print_r($ar);
 ?>
-
 </pre>
